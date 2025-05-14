@@ -15,7 +15,7 @@ jobs:
         uses: replicate/setup-cog@v2
       - name: Build
         run: |
-          cog build -t whisperX
+          cog build -t whisper-x
       - name: Login to ACR
         uses: aliyun/acr-login@v1
         with:
