@@ -1,0 +1,31 @@
+name: ACR Push
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Cog
+        uses: replicate/setup-cog@v2
+      - name: Build
+        run: |
+          cog build -t whisperX
+  push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to ACR
+        uses: aliyun/acr-login@v1
+        with:
+          login-server: https://crpi-jf3vq48fa4dy2pk4.ap-northeast-1.personal.cr.aliyuncs.com
+          username: "${{ secrets.REGISTRY_USERNAME }}"
+          password: "${{ secrets.REGISTRY_PASSWORD }}"
+      - name: Build and push image
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t crpi-jf3vq48fa4dy2pk4.ap-northeast-1.personal.cr.aliyuncs.com/cct_acr_shukai/self-github:$IMAGE_TAG .
+          docker push crpi-jf3vq48fa4dy2pk4.ap-northeast-1.personal.cr.aliyuncs.com/cct_acr_shukai/self-github:$IMAGE_TAG
