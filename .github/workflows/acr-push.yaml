@@ -6,17 +6,16 @@ on:
       - main
 
 jobs:
-  build:
+  build_and_push:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Setup Cog
         uses: replicate/setup-cog@v2
       - name: Build
         run: |
           cog build -t whisperX
-  push:
-    runs-on: ubuntu-latest
-    steps:
       - name: Login to ACR
         uses: aliyun/acr-login@v1
         with:
@@ -27,5 +26,4 @@ jobs:
         env:
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t crpi-jf3vq48fa4dy2pk4.ap-northeast-1.personal.cr.aliyuncs.com/cct_acr_shukai/self-github:$IMAGE_TAG .
           docker push crpi-jf3vq48fa4dy2pk4.ap-northeast-1.personal.cr.aliyuncs.com/cct_acr_shukai/self-github:$IMAGE_TAG
